@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SEARI – Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>SEARI – Dashboard de Estadísticas</h1>
+        <a href="/" class="btn-home">
+            <svg class="home-icon" viewBox="0 0 24 24" width="18" height="18">
+                <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            Ir al Inicio
+        </a>
+    </div>
+
+    <!-- Contenedor de estadísticas -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <h3>Total Registros</h3>
+            <p id="total-registros">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Valor Total</h3>
+            <p id="valor-total">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Valor Promedio</h3>
+            <p id="valor-promedio">0</p>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="chart-container">
+        <canvas id="chart" width="600" height="300"></canvas>
+    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

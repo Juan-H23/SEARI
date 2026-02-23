@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SEARI – Registros</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <script src="/static/Scripts.js"></script>
+         <div class="dashboard-header">
+              <h1>SEARI – Registros</h1>
+               <a href="/dashboard" class="btn-home">
+                    <svg class="home-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    Ir al Dashboard
+                </a>
+         </div>
+    <!-- Formulario para agregar registro -->
+    <h2>Agregar nuevo registro</h2>
+    <form action="/add" method="post">
+        <input type="text" name="concepto" placeholder="Concepto" required>
+        <input type="number" step="0.01" name="valor" placeholder="Valor" required>
+        <input type="date" name="fecha" required>
+        <label>Tipo:</label>
+        <select name="tipo" required>
+            <option value="Ingreso">Ingreso</option>
+            <option value="Egreso">Egreso</option>
+        </select>
+        <button type="submit" class="add">Agregar</button>
+    </form>
+
+    <!-- Lista de registros -->
+    <h2>Lista de registros</h2>
+    {% if registros %}
+        <ul>
+        {% for r in registros %}
+            <li>
+                <span><strong>ID:</strong> {{ r.id }}</span>
+                <span><strong>Concepto:</strong> {{ r.concepto }}</span>
+                <span><strong>Valor:</strong> {{ r.valor }}</span>
+                <span><strong>Fecha:</strong> {{ r.fecha }}</span>
+                 <span><strong>Tipo:</strong> {{ r.tipo }}</span>
+               
+
+                <!-- Editar -->
+                <form action="/edit/{{ r.id }}" method="post" style="display:inline">
+                    <input type="text" name="concepto" value="{{ r.concepto }}" required>
+                    <input type="number" step="0.01" name="valor" value="{{ r.valor }}" required>
+                    <input type="date" name="fecha" value="{{ r.fecha }}" required>
+                    <input type="text" name="tipo" value="{{ r.tipo }}" required>
+                    <button type="submit" class="edit">Editar</button>
+                </form>
+
+                <!-- Borrar -->
+                <form action="/delete/{{ r.id }}" method="post" style="display:inline">
+                    <button type="submit" class="delete">Borrar</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay registros todavía.</p>
+    {% endif %}
+
+    <!-- Modal de confirmación de borrado -->
+    <div id="modal-delete" class="modal">
+        <div class="modal-content">
+            <p>¿Estás seguro de que deseas eliminar este registro?</p>
+            <div class="modal-buttons">
+                <button id="confirm-delete" class="delete">Sí, eliminar</button>
+                <button id="cancel-delete" class="edit">Cancelar</button>
+            </div>
+        </div>
+    </div>
+     
+</body>
+</html>
