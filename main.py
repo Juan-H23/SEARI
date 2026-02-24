@@ -99,26 +99,38 @@ from fastapi import FastAPI, Request, Depends
 def get_data(db: Session = Depends(get_db)):
     registros = db.query(Registro).all()
 
-    conceptos = []
-    valores = []
     fechas = []
+    ingresos = []
+    egresos = []
+
+    total_ingresos = 0
+    total_egresos = 0
 
     for r in registros:
-        conceptos.append(r.concepto)
-        valores.append(float(r.valor))  # FORZAMOS A FLOAT
-        fechas.append(r.fecha.strftime("%Y-%m-%d"))
+        fecha_formateada = r.fecha.strftime("%Y-%m-%d")
+        fechas.append(fecha_formateada)
 
-    total_registros = len(valores)
-    valor_total = float(sum(valores))
-    valor_promedio = float(valor_total / total_registros) if total_registros > 0 else 0
+        if r.tipo == "Ingreso":
+            ingresos.append(float(r.valor))
+            egresos.append(0)
+            total_ingresos += float(r.valor)
+        elif r.tipo == "Egreso":
+            egresos.append(float(r.valor))
+            ingresos.append(0)
+            total_egresos += float(r.valor)
+        else:
+            ingresos.append(0)
+            egresos.append(0)
+
+    balance = total_ingresos - total_egresos
 
     return {
-        "conceptos": conceptos,
-        "valores": valores,
         "fechas": fechas,
-        "total_registros": total_registros,
-        "valor_total": round(valor_total, 2),
-        "valor_promedio": round(valor_promedio, 2)
+        "ingresos": ingresos,
+        "egresos": egresos,
+        "total_ingresos": round(total_ingresos, 2),
+        "total_egresos": round(total_egresos, 2),
+        "balance": round(balance, 2)
     }
 
 @app.get("/dashboard")

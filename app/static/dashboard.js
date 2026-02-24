@@ -1,93 +1,130 @@
-// Configuración optimizada para muchos registros
-const ctx = document.getElementById('chart').getContext('2d');
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado');
+    
+    // Verificar que el canvas existe
+    const chartElement = document.getElementById('chart');
+    if (!chartElement) {
+        console.error('Error: No se encontró el elemento canvas con id "chart"');
+        return;
+    }
+    
+    const ctx = chartElement.getContext('2d');
+    if (!ctx) {
+        console.error('Error: No se pudo obtener el contexto 2D del canvas');
+        return;
+    }
 
-fetch('/data')
-    .then(response => response.json())
-    .then(data => {
-       // Calcular estadísticas
-        document.getElementById('total-registros').textContent = data.total_registros;
-        document.getElementById('valor-total').textContent = data.valor_total;
-        document.getElementById('valor-promedio').textContent = data.valor_promedio;
+    fetch('/data')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos recibidos:', data);
 
-        const totalRegistros = data.total_registros;
-        const muchosRegistros = totalRegistros > 15;
-        
-        // Limitar la cantidad de etiquetas mostradas si hay muchos registros
-        let labels = data.conceptos;
-        let valores = data.valores;
-        
-        if (muchosRegistros) {
-            // Mostrar solo algunas etiquetas para no saturar
-            labels = data.conceptos.map((label, index) => {
-                // Mostrar etiqueta cada 3 registros o el último
-                return index % 3 === 0 || index === data.conceptos.length - 1 ? label : '';
-            });
-        }
+            // Verificar que los elementos existen antes de usarlos
+            const totalIngresosEl = document.getElementById('total-ingresos');
+            const totalEgresosEl = document.getElementById('total-egresos');
+            const balanceEl = document.getElementById('balance');
+            
+            if (!totalIngresosEl || !totalEgresosEl || !balanceEl) {
+                console.error('Error: No se encontraron los elementos de las cards');
+                return;
+            }
 
-        // Crear gráfico más profesional y compacto
-        const myChart = new Chart(ctx, {
-            type: 'line', // Cambiado a línea para mejor visualización con muchos datos
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Valor de los registros',
-                    data: valores,
-                    backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                    borderColor: 'rgba(74, 144, 226, 1)',
-                    borderWidth: 2,
-                    pointRadius: muchosRegistros ? 2 : 3, // Puntos más pequeños si hay muchos registros
-                    pointHoverRadius: 5,
-                    tension: 0.1, // Suavizado ligero de la línea
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { 
-                        display: false 
-                    },
-                    title: { 
-                        display: true, 
-                        text: muchosRegistros ? 'Tendencia de Registros' : 'Dashboard de Registros',
-                        font: { size: 14 }
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
+            // Verificar si hay datos
+            if (data.fechas.length === 0) {
+                totalIngresosEl.textContent = '0.00';
+                totalEgresosEl.textContent = '0.00';
+                balanceEl.textContent = '0.00';
+                return;
+            }
+
+            // Actualizar tarjetas financieras con 2 decimales
+            totalIngresosEl.textContent = data.total_ingresos.toFixed(2);
+            totalEgresosEl.textContent = data.total_egresos.toFixed(2);
+            balanceEl.textContent = data.balance.toFixed(2);
+
+            // Procesar etiquetas para el gráfico
+            const muchosRegistros = data.fechas.length > 15;
+            let labels = data.fechas;
+
+            if (muchosRegistros) {
+                labels = data.fechas.map((label, index) => {
+                    return index % 3 === 0 || index === data.fechas.length - 1 ? label : '';
+                });
+            }
+
+            // Destruir gráfico anterior si existe
+            if (window.myChart instanceof Chart) {
+                window.myChart.destroy();
+            }
+
+            // Crear nuevo gráfico
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ingresos',
+                            data: data.ingresos,
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.2,
+                            fill: true
+                        },
+                        {
+                            label: 'Egresos',
+                            data: data.egresos,
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.2,
+                            fill: true
+                        }
+                    ]
                 },
-                scales: { 
-                    y: { 
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ingresos vs Egresos'
+                        }
                     },
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            maxRotation: muchosRegistros ? 45 : 0, // Rotar etiquetas si hay muchos
-                            font: { size: muchosRegistros ? 9 : 11 }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2);
+                                }
+                            }
                         }
                     }
-                },
-                elements: {
-                    line: {
-                        borderWidth: 2
-                    }
-                },
-                layout: {
-                    padding: {
-                        top: 10,
-                        bottom: 10
-                    }
                 }
-            }
+            });
+            
+            console.log('Gráfico creado exitosamente');
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos:', error);
+            // Verificar que los elementos existen antes de asignarles texto
+            const totalIngresos = document.getElementById('total-ingresos');
+            const totalEgresos = document.getElementById('total-egresos');
+            const balance = document.getElementById('balance');
+            
+            if (totalIngresos) totalIngresos.textContent = 'Error';
+            if (totalEgresos) totalEgresos.textContent = 'Error';
+            if (balance) balance.textContent = 'Error';
         });
-    })
-    .catch(error => {
-        console.error('Error al cargar los datos:', error);
-        document.getElementById('total-registros').textContent = 'Error';
-        document.getElementById('valor-total').textContent = 'Error';
-        document.getElementById('valor-promedio').textContent = 'Error';
-    });
+});

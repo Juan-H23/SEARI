@@ -2,4 +2,4 @@
 
 cd C:\Users\TVAPAN22\Desktop\SEARI
 venv\Scripts\activate.bat
-uvicorn app.main:app --reload
+uvicorn main:app --reload
