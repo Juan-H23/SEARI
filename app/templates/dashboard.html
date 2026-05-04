@@ -2,44 +2,89 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEARI – Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/dashboard.css">
 </head>
 <body>
-    <div class="dashboard-header">
-        <h1>SEARI – Dashboard de Estadísticas</h1>
-        <a href="/" class="btn-home">
-            <svg class="home-icon" viewBox="0 0 24 24" width="18" height="18">
-                <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-            Ir al Inicio
-        </a>
-    </div>
 
-    <!-- Contenedor de estadísticas -->
-    <div class="stats-container">
-        <div class="stat-card">
-            <h3>Total Ingresos</h3>
-            <p id="total-ingresos">0</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Egresos</h3>
-           <p id="total-egresos">0</p>
-        </div>
-        <div class="stat-card">
-            <h3>Balance</h3>
-            <p id="balance">0</p>
-        </div>
-    </div>
+<div class="app-shell">
 
-    <!-- Gráfico -->
-    <div class="chart-container">
-        <canvas id="chart" width="600" height="300"></canvas>
-    </div>
+   <header class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-brand-dot"></div>
+            SEARI
+        </div>
+        <nav class="topbar-nav">
+            <a href="/">Registros</a>
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/analytics">Análisis</a>
+        </nav>
+    </header>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 👇 MOVER EL SCRIPT AQUÍ, DESPUÉS DE TODOS LOS ELEMENTOS -->
-    <script src="/static/dashboard.js"></script>
+    <main class="page-content">
+
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-card card-ing">
+                <h3>Total Ingresos</h3>
+                <p id="total-ingresos">—</p>
+                <div class="stat-sub" id="sub-ingresos">&nbsp;</div>
+            </div>
+            <div class="stat-card card-eg">
+                <h3>Total Egresos</h3>
+                <p id="total-egresos">—</p>
+                <div class="stat-sub" id="sub-egresos">&nbsp;</div>
+            </div>
+            <div class="stat-card card-bal">
+                <h3>Balance</h3>
+                <p id="balance">—</p>
+                <div class="stat-sub" id="sub-balance">&nbsp;</div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-row">
+            <span class="filter-label">Desde</span>
+            <input type="date" id="start-date">
+            <div class="filter-sep"></div>
+            <span class="filter-label">Hasta</span>
+            <input type="date" id="end-date">
+            <button id="filter-btn">Filtrar</button>
+            <button id="reset-btn">Limpiar</button>
+        </div>
+
+        <!-- Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <span class="chart-title">Ingresos vs Egresos — agrupado por mes</span>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--green)"></div>
+                        Ingresos
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--red)"></div>
+                        Egresos
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: var(--blue)"></div>
+                        Balance neto
+                    </div>
+                </div>
+            </div>
+            <canvas id="chart"></canvas>
+        </div>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/dashboard.js"></script>
 </body>
 </html>

@@ -2,77 +2,196 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEARI – Registros</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <script src="/static/Scripts.js"></script>
-         <div class="dashboard-header">
-              <h1>SEARI – Registros</h1>
-               <a href="/dashboard" class="btn-home">
-                    <svg class="home-icon" viewBox="0 0 24 24" width="18" height="18">
-                        <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+
+<div class="app-shell">
+
+   <header class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-brand-dot"></div>
+            SEARI
+        </div>
+        <nav class="topbar-nav">
+            <a href="/" class="active">Registros </a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/analytics" >Análisis</a>
+        </nav>
+    </header>
+
+    <main class="page-content">
+
+        <div class="dashboard-header">
+            <h1>Registros</h1>
+        </div>
+
+        <!-- ── Add form ── -->
+        <h2>Nuevo registro</h2>
+        <form action="/add" method="post">
+            <input type="text"   name="concepto" placeholder="Concepto" required>
+            <input type="number" step="0.01" name="valor" placeholder="0.00" required>
+            <input type="date"   name="fecha" required>
+            <select name="tipo" required>
+                <option value="Ingreso">Ingreso</option>
+                <option value="Egreso">Egreso</option>
+            </select>
+            <button type="submit" class="add">+ Agregar</button>
+        </form>
+
+        <!-- ── DataTable ── -->
+        <h2>Lista de registros</h2>
+
+        {% if registros %}
+
+        <script id="dt-data" type="application/json">
+        [{% for r in registros %}{"id":{{ r.id }},"concepto":{{ r.concepto|tojson }},"valor":{{ r.valor }},"fecha":"{{ r.fecha }}","tipo":"{{ r.tipo }}"}{% if not loop.last %},{% endif %}{% endfor %}]
+        </script>
+
+        <div class="dt-shell">
+
+            <div class="dt-toolbar">
+                <div class="dt-search-wrap">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    Ir al Dashboard
-                </a>
-         </div>
-    <!-- Formulario para agregar registro -->
-    <h2>Agregar nuevo registro</h2>
-    <form action="/add" method="post">
-        <input type="text" name="concepto" placeholder="Concepto" required>
-        <input type="number" step="0.01" name="valor" placeholder="Valor" required>
-        <input type="date" name="fecha" required>
-        <label>Tipo:</label>
-        <select name="tipo" required>
-            <option value="Ingreso">Ingreso</option>
-            <option value="Egreso">Egreso</option>
-        </select>
-        <button type="submit" class="add">Agregar</button>
-    </form>
+                    <input type="text" id="dt-search" placeholder="Buscar por concepto, fecha, valor…" autocomplete="off">
+                </div>
+                <div class="dt-sep"></div>
+                <div class="dt-filters">
+                    <button class="dt-pill active" data-filter="all">Todos</button>
+                    <button class="dt-pill ing"    data-filter="ingreso">Ingresos</button>
+                    <button class="dt-pill eg"     data-filter="egreso">Egresos</button>
+                </div>
+                <div class="dt-sep"></div>
+                <select id="dt-perpage" title="Filas por página">
+                    <option value="10">10 filas</option>
+                    <option value="25">25 filas</option>
+                    <option value="50">50 filas</option>
+                    <option value="100">100 filas</option>
+                </select>
+            </div>
 
-    <!-- Lista de registros -->
-    <h2>Lista de registros</h2>
-    {% if registros %}
-        <ul>
-        {% for r in registros %}
-            <li>
-                <span><strong>ID:</strong> {{ r.id }}</span>
-                <span><strong>Concepto:</strong> {{ r.concepto }}</span>
-                <span><strong>Valor:</strong> {{ r.valor }}</span>
-                <span><strong>Fecha:</strong> {{ r.fecha }}</span>
-                 <span><strong>Tipo:</strong> {{ r.tipo }}</span>
-               
+            <div class="dt-head">
+                <div class="dt-th" data-col="id">
+                    ID
+                    <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path class="neutral-arrow" d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+                        <path class="asc-arrow"     d="M12 5v14M5 12l7-7 7 7"  style="display:none"/>
+                        <path class="desc-arrow"    d="M12 5v14M5 12l7 7 7-7" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="dt-th" data-col="concepto">
+                    Concepto
+                    <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path class="neutral-arrow" d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+                        <path class="asc-arrow"     d="M12 5v14M5 12l7-7 7 7"  style="display:none"/>
+                        <path class="desc-arrow"    d="M12 5v14M5 12l7 7 7-7" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="dt-th" data-col="valor">
+                    Valor
+                    <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path class="neutral-arrow" d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+                        <path class="asc-arrow"     d="M12 5v14M5 12l7-7 7 7"  style="display:none"/>
+                        <path class="desc-arrow"    d="M12 5v14M5 12l7 7 7-7" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="dt-th" data-col="fecha">
+                    Fecha
+                    <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path class="neutral-arrow" d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+                        <path class="asc-arrow"     d="M12 5v14M5 12l7-7 7 7"  style="display:none"/>
+                        <path class="desc-arrow"    d="M12 5v14M5 12l7 7 7-7" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="dt-th" data-col="tipo">
+                    Tipo
+                    <svg class="sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path class="neutral-arrow" d="M8 9l4-4 4 4M8 15l4 4 4-4"/>
+                        <path class="asc-arrow"     d="M12 5v14M5 12l7-7 7 7"  style="display:none"/>
+                        <path class="desc-arrow"    d="M12 5v14M5 12l7 7 7-7" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="dt-th" data-col="_actions">Acciones</div>
+            </div>
 
-                <!-- Editar -->
-                <form action="/edit/{{ r.id }}" method="post" style="display:inline">
-                    <input type="text" name="concepto" value="{{ r.concepto }}" required>
-                    <input type="number" step="0.01" name="valor" value="{{ r.valor }}" required>
-                    <input type="date" name="fecha" value="{{ r.fecha }}" required>
-                    <input type="text" name="tipo" value="{{ r.tipo }}" required>
-                    <button type="submit" class="edit">Editar</button>
-                </form>
+            <div class="dt-body" id="dt-body"></div>
 
-                <!-- Borrar -->
-                <form action="/delete/{{ r.id }}" method="post" style="display:inline">
-                    <button type="submit" class="delete">Borrar</button>
-                </form>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No hay registros todavía.</p>
-    {% endif %}
+            <div class="dt-footer">
+                <div class="dt-info" id="dt-info">—</div>
+                <div class="dt-pagination" id="dt-pagination"></div>
+            </div>
 
-    <!-- Modal de confirmación de borrado -->
-    <div id="modal-delete" class="modal">
-        <div class="modal-content">
-            <p>¿Estás seguro de que deseas eliminar este registro?</p>
-            <div class="modal-buttons">
-                <button id="confirm-delete" class="delete">Sí, eliminar</button>
-                <button id="cancel-delete" class="edit">Cancelar</button>
+        </div>
+
+        {% else %}
+        <div class="dt-shell">
+            <div class="dt-empty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                    <path d="M3 9h18M9 21V9"/>
+                </svg>
+                <p>Sin registros todavía</p>
+                <small>Agrega tu primer movimiento usando el formulario de arriba</small>
             </div>
         </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<!-- ── Modal: Eliminar ── -->
+<div id="modal-delete" class="modal">
+    <div class="modal-content">
+        <p>¿Eliminar este registro?</p>
+        <small>Esta acción no se puede deshacer.</small>
+        <div class="modal-buttons">
+            <button id="confirm-delete" class="delete">Eliminar</button>
+            <button id="cancel-delete" class="edit">Cancelar</button>
+        </div>
     </div>
-     
+</div>
+
+<!-- ── Modal: Editar ── -->
+<div id="modal-edit" class="modal">
+    <div class="modal-content modal-edit-content">
+        <div class="modal-edit-header">
+            <span class="modal-edit-title">Editar registro</span>
+            <span class="modal-edit-id" id="edit-badge">#—</span>
+        </div>
+        <form id="edit-form" method="post">
+            <div class="edit-field">
+                <label class="edit-label">Concepto</label>
+                <input type="text" id="edit-concepto" name="concepto" required>
+            </div>
+            <div class="edit-row">
+                <div class="edit-field">
+                    <label class="edit-label">Valor</label>
+                    <input type="number" step="0.01" id="edit-valor" name="valor" required>
+                </div>
+                <div class="edit-field">
+                    <label class="edit-label">Fecha</label>
+                    <input type="date" id="edit-fecha" name="fecha" required>
+                </div>
+            </div>
+            <div class="edit-field">
+                <label class="edit-label">Tipo</label>
+                <select id="edit-tipo" name="tipo" required>
+                    <option value="Ingreso">Ingreso</option>
+                    <option value="Egreso">Egreso</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="add">Guardar cambios</button>
+                <button type="button" id="cancel-edit" class="edit">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/static/Scripts.js"></script>
 </body>
 </html>

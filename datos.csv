@@ -1,0 +1,58 @@
+concepto,valor,fecha,tipo
+Venta de Servicios Web,4500.00,2025-01-05,Ingreso
+Pago Arriendo Oficina,1200.00,2025-01-10,Egreso
+Servicios Públicos Enero,350.00,2025-01-15,Egreso
+Venta Software Licencia,2800.00,2025-01-22,Ingreso
+Nómina Mensual Equipo,5500.00,2025-01-30,Egreso
+Compra Acciones Apple,1500.00,2025-02-02,Egreso
+Rendimientos Bonos,450.00,2025-02-12,Ingreso
+Suscripción Cloud AWS,200.00,2025-02-15,Egreso
+Consultoría TI Especializada,3200.00,2025-02-25,Ingreso
+Nómina Mensual Equipo,5500.00,2025-02-28,Egreso
+Venta App Mobile Personalizada,6000.00,2025-03-05,Ingreso
+Renovación Equipos Cómputo,2500.00,2025-03-12,Egreso
+Insumos de Cafetería,80.00,2025-03-18,Egreso
+Aporte a Fondo Colectivo,1000.00,2025-03-25,Egreso
+Nómina Mensual Equipo,5500.00,2025-03-30,Egreso
+Campaña Marketing Digital,1200.00,2025-04-05,Egreso
+Venta Mantenimiento Anual,1800.00,2025-04-12,Ingreso
+Intereses Plazo Fijo,120.00,2025-04-20,Ingreso
+Nómina Mensual Equipo,5500.00,2025-04-30,Egreso
+Venta Desarrollo E-commerce,7500.00,2025-05-08,Ingreso
+Seguro Contra Incendios,400.00,2025-05-15,Egreso
+Venta Soporte Técnico,950.00,2025-05-22,Ingreso
+Compra Criptoactivos,500.00,2025-05-25,Egreso
+Nómina Mensual Equipo,5500.00,2025-05-30,Egreso
+Venta Licencias SaaS,4200.00,2025-06-10,Ingreso
+Mantenimiento Aire Acondicionado,150.00,2025-06-18,Egreso
+Prima Legal Empleados,2750.00,2025-06-25,Egreso
+Nómina Mensual Equipo,5500.00,2025-06-30,Egreso
+Dividendos Acciones,320.00,2025-07-05,Ingreso
+Venta Consultoría Estratégica,5000.00,2025-07-15,Ingreso
+Reparación Red Eléctrica,220.00,2025-07-20,Egreso
+Adquisición Bienes Raíces,2000.00,2025-07-25,Egreso
+Nómina Mensual Equipo,5500.00,2025-07-31,Egreso
+Venta App iOS/Android,8200.00,2025-08-05,Ingreso
+Papelería y Útiles,120.00,2025-08-12,Egreso
+Viáticos Viaje Negocios,850.00,2025-08-20,Egreso
+Nómina Mensual Equipo,5500.00,2025-08-30,Egreso
+Venta Auditoría Seguridad,3800.00,2025-09-07,Ingreso
+Suscripciones Software CRM,300.00,2025-09-15,Egreso
+Intereses Cuenta Ahorros,45.00,2025-09-25,Ingreso
+Nómina Mensual Equipo,5500.00,2025-09-30,Egreso
+Gasto Expansión Oficina,3500.00,2025-10-05,Egreso
+Venta Implementación ERP,9500.00,2025-10-15,Ingreso
+Capacitación Personal,1000.00,2025-10-22,Egreso
+Nómina Mensual Equipo,5500.00,2025-10-31,Egreso
+Venta Optimización SEO,2100.00,2025-11-05,Ingreso
+Impuesto Predial,600.00,2025-11-12,Egreso
+Venta Soporte Remoto,1200.00,2025-11-20,Ingreso
+Retorno Inversión Startup,4500.00,2025-11-25,Ingreso
+Nómina Mensual Equipo,5500.00,2025-11-30,Egreso
+Venta Proyecto Fin de Año,12000.00,2025-12-05,Ingreso
+Bonificación Navideña,3000.00,2025-12-15,Egreso
+Cena Empresarial,700.00,2025-12-20,Egreso
+Compra Fondos Indexados,1500.00,2025-12-22,Egreso
+Prima Legal Diciembre,2750.00,2025-12-28,Egreso
+Nómina Mensual Equipo,5500.00,2025-12-30,Egreso
+Venta Licencias Adicionales,1500.00,2025-12-31,Ingreso

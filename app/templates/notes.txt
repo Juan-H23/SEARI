@@ -3,3 +3,9 @@
 cd C:\Users\TVAPAN22\Desktop\SEARI
 venv\Scripts\activate.bat
 uvicorn main:app --reload
+
+//commit//
+hay, luego
+git push origin main
+git pull --rebase origin main
+# Resuelve conflictos si los 

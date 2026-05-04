@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEARI – Análisis</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/analytics.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-brand-dot"></div>
+            SEARI
+        </div>
+        <nav class="topbar-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/">Registros</a>
+            <a href="/analytics" class="active">Análisis</a>
+        </nav>
+    </header>
+
+    <main class="page-content">
+
+        <div class="dashboard-header">
+            <h1>Análisis e Inteligencia</h1>
+        </div>
+
+        <!-- ── Controls ── -->
+        <div class="an-controls">
+            <div class="an-controls-left">
+                <div class="an-period-group">
+                    <span class="an-label">Período</span>
+                    <div class="an-pills">
+                        <button class="an-pill active" data-periodo="diario">Diario</button>
+                        <button class="an-pill"        data-periodo="mensual">Mensual</button>
+                        <button class="an-pill"        data-periodo="anual">Anual</button>
+                    </div>
+                </div>
+                <div class="an-sep"></div>
+                <span class="an-label">Desde</span>
+                <input type="date" id="an-start">
+                <span class="an-label">Hasta</span>
+                <input type="date" id="an-end">
+                <button id="an-apply" class="an-btn-primary">Aplicar</button>
+                <button id="an-reset"  class="an-btn-ghost">Limpiar</button>
+            </div>
+            <div class="an-controls-right">
+                <span class="an-label">Exportar</span>
+                <button class="an-btn-export" data-fmt="csv">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    CSV
+                </button>
+                <button class="an-btn-export" data-fmt="excel">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    Excel
+                </button>
+                <button class="an-btn-export" data-fmt="pdf">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- ── KPI cards ── -->
+        <div class="an-kpi-grid" id="an-kpis">
+            <div class="an-kpi-card green">
+                <div class="an-kpi-label">Total Ingresos</div>
+                <div class="an-kpi-value" id="kpi-ingresos">—</div>
+                <div class="an-kpi-sub"   id="kpi-n">—</div>
+            </div>
+            <div class="an-kpi-card red">
+                <div class="an-kpi-label">Total Egresos</div>
+                <div class="an-kpi-value" id="kpi-egresos">—</div>
+                <div class="an-kpi-sub"   id="kpi-eg-sub">—</div>
+            </div>
+            <div class="an-kpi-card blue">
+                <div class="an-kpi-label">Balance Neto</div>
+                <div class="an-kpi-value" id="kpi-balance">—</div>
+                <div class="an-kpi-sub"   id="kpi-margen">—</div>
+            </div>
+            <div class="an-kpi-card amber">
+                <div class="an-kpi-label">Tendencia</div>
+                <div class="an-kpi-value" id="kpi-tendencia">—</div>
+                <div class="an-kpi-sub"   id="kpi-atipicos">—</div>
+            </div>
+        </div>
+
+        <!-- ── Insights ── -->
+        <div class="an-section-grid">
+
+            <div class="an-card">
+                <div class="an-card-header">
+                    <span class="an-card-title">Inteligencia basada en reglas</span>
+                    <span class="an-card-badge">AUTO</span>
+                </div>
+                <div id="an-insights" class="an-insights-list">
+                    <div class="an-skeleton"></div>
+                    <div class="an-skeleton short"></div>
+                    <div class="an-skeleton"></div>
+                </div>
+            </div>
+
+            <div class="an-card">
+                <div class="an-card-header">
+                    <span class="an-card-title">Recomendaciones</span>
+                    <span class="an-card-badge amber">ACCIÓN</span>
+                </div>
+                <div id="an-recs" class="an-recs-list">
+                    <div class="an-skeleton"></div>
+                    <div class="an-skeleton short"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── Period table ── -->
+        <div class="an-card" style="margin-top: 16px;">
+            <div class="an-card-header">
+                <span class="an-card-title">Detalle por período</span>
+                <span id="an-table-label" class="an-card-badge">—</span>
+            </div>
+            <div class="an-table-wrap">
+                <table class="an-table" id="an-table">
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th class="num">Ingresos</th>
+                            <th class="num">Egresos</th>
+                            <th class="num">Balance</th>
+                            <th class="num">Margen</th>
+                            <th class="num">Var. Ing.</th>
+                            <th class="num">Var. Eg.</th>
+                            <th class="num">Var. Bal.</th>
+                            <th class="num">Mov.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="an-tbody"></tbody>
+                    <tfoot id="an-tfoot"></tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Outliers ── -->
+        <div class="an-card" id="an-outliers-card" style="margin-top: 16px; display: none;">
+            <div class="an-card-header">
+                <span class="an-card-title">Valores atípicos detectados</span>
+                <span class="an-card-badge red" id="an-outliers-count">0</span>
+            </div>
+            <div class="an-table-wrap">
+                <table class="an-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Concepto</th>
+                            <th class="num">Valor</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Razón</th>
+                        </tr>
+                    </thead>
+                    <tbody id="an-outliers-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script src="/static/analytics.js"></script>
+</body>
+</html>
